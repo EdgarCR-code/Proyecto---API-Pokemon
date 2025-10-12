@@ -1,0 +1,19 @@
+{
+  "name": "proyecto---api-pokemon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "web-dev-server --node-resolve --open --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lit-element": "^4.2.1",
+    "smart-webcomponents": "^24.0.22"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.4.6"
+  }
+}
