@@ -4,6 +4,7 @@ import styles from "./form-styles.js"
 export class FormComponent extends LitElement {
   static styles = [styles];
   static properties = {
+    id: { type: Number },
     nombre: { type: String },
     tipos: { type: Array },
     peso: { type: Number },
@@ -13,7 +14,7 @@ export class FormComponent extends LitElement {
 
   constructor() {
     super();
-    this.id = 1;
+    this.id = null;
     this.nombre = "";
     this.tipos = [];
     this.peso = "";
@@ -25,40 +26,64 @@ export class FormComponent extends LitElement {
     ];
   }
 
-  //Guardar Pokémon
+  // Guardar o actualizar Pokémon
   guardarPokemon() {
     if (!this.nombre || this.tipos.length === 0 || this.peso === "" || this.altura === "") {
       alert("Todos los campos son obligatorios.");
       return;
     }
 
-    //Definir id
     const localData = JSON.parse(localStorage.getItem("pokemons")) || [];
-    const maxLocalId = localData.length > 0 ? Math.max(...localData.map(p => p.id)) : 0;
-    const maxApiId = 20; //Es el numero de pokemones que pedimos en el fetch a la api
-    const nuevoId = Math.max(maxLocalId, maxApiId) + 1;
 
-    const nuevo = {
-      id: nuevoId,
-      nombre: this.nombre,
-      tipos: this.tipos.join(", "),
-      peso: this.peso,
-      altura: this.altura
-    };
+    let nuevo;
+    if (this.id) {
+      // Si tiene ID → actualizar el existente
+      nuevo = {
+        id: this.id,
+        nombre: this.nombre,
+        tipos: this.tipos.join(", "),
+        peso: this.peso,
+        altura: this.altura
+      };
 
-    
-    localData.push(nuevo);
+      const index = localData.findIndex(p => p.id === this.id);
+      if (index !== -1) {
+        localData[index] = nuevo;
+      } else {
+        // si no estaba en localStorage (por alguna razón), lo agregamos
+        localData.push(nuevo);
+      }
+      alert(`Pokémon #${this.id} actualizado con éxito.`);
+    } else {
+      //Si no tiene ID → crear nuevo
+      const maxApiId = 20;//Es el numero de pokemos que pedimos en el fetch de la API
+      const maxLocalId = localData.length > 0 ? Math.max(...localData.map(p => p.id)) : 0;
+      const nuevoId = Math.max(maxApiId, maxLocalId) + 1;
+
+      nuevo = {
+        id: nuevoId,
+        nombre: this.nombre,
+        tipos: this.tipos.join(", "),
+        peso: this.peso,
+        altura: this.altura
+      };
+
+      localData.push(nuevo);
+      alert(`Pokémon agregado con ID #${nuevoId}`);
+    }
+
     localStorage.setItem("pokemons", JSON.stringify(localData));
 
+    //Notificar al listado
     this.dispatchEvent(new CustomEvent('pokemon-agregado', { bubbles: true, composed: true }));
 
-    alert("Pokémon agregado con éxito");
     this.limpiarFormulario();
     window.location.reload();
   }
 
-  //Editar Pokémon existente
+  //Cargar Pokémon para edición
   cargarPokemon(pokemon) {
+    this.id = pokemon.id;
     this.nombre = pokemon.nombre;
     this.tipos = pokemon.tipos.split(", ").filter(Boolean);
     this.peso = pokemon.peso;
@@ -66,6 +91,7 @@ export class FormComponent extends LitElement {
   }
 
   limpiarFormulario() {
+    this.id = null;
     this.nombre = "";
     this.tipos = [];
     this.peso = "";
@@ -73,7 +99,6 @@ export class FormComponent extends LitElement {
     this.requestUpdate();
   }
 
-  //Manejo de checkboxes
   toggleTipo(e) {
     const tipo = e.target.value;
     if (e.target.checked) {
@@ -85,7 +110,7 @@ export class FormComponent extends LitElement {
 
   render() {
     return html`
-      <h3>Agregar Pokémon</h3>
+      <h3>${this.id ? `Editar Pokémon #${this.id}` : 'Agregar Pokémon'}</h3>
       <form @submit=${e => e.preventDefault()}>
         <label>Nombre:</label>
         <input placeholder="Ej. Pikachu" .value=${this.nombre} @input=${e => this.nombre = e.target.value}>
@@ -111,7 +136,9 @@ export class FormComponent extends LitElement {
         <label>Altura (m):</label>
         <input type="number" min="1" .value=${this.altura} @input=${e => this.altura = e.target.value}>
 
-        <smart-button type="button" @click=${this.guardarPokemon}>Guardar Pokémon</smart-button>
+        <button type="button" @click=${this.guardarPokemon}>
+          ${this.id ? 'Actualizar Pokémon' : 'Guardar Pokémon'} <!-- Botón para guardar o actualizar Pokémon -->
+        </button>
       </form>
     `;
   }
