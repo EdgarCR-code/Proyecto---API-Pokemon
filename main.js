@@ -7,12 +7,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const formulario = document.querySelector('form-component');
   const listado = document.querySelector('list-component');
 
-  // 🔄 1. Actualiza el listado cuando se agrega un nuevo Pokémon
+  //Actualiza el listado cuando se agrega un nuevo Pokémon
   formulario.addEventListener('pokemon-agregado', () => {
     listado.obtenerPokemons(); // vuelve a cargar los datos
   });
 
-  // 📝 2. Escucha cuando se quiere editar un Pokémon del listado
+  //Escucha cuando se quiere editar un Pokémon del listado
   listado.addEventListener('editar-pokemon', (event) => {
     formulario.cargarPokemon(event.detail);
   });
