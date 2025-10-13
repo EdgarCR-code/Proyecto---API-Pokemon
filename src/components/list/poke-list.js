@@ -64,8 +64,8 @@ export class ListComponent extends LitElement {
                 <td>
                   ${p.id > 20 // Pokémon de la API
                     ? html`
-                    <smart-button @click=${() => this.editarPokemon(p)}>Editar</smart-button>
-                    <smart-button @click=${() => this.eliminarPokemon(p.id)}>Eliminar</smart-button>`
+                    <smart-button class="glow-on-hover" @click=${() => this.editarPokemon(p)}>Editar</smart-button>
+                    <smart-button class="glow-on-hover" @click=${() => this.eliminarPokemon(p.id)}>Eliminar</smart-button>`
                   : html`<em>API</em>`}
                 </td>
                 </tr>

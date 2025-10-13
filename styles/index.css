@@ -1,0 +1,22 @@
+.contenedor {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+list-component {
+    width: 80vw;
+}
+h1 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #f7f7f7;
+    background-color: rgb(82, 82, 247);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80vw;
+    position: relative;
+    /* margin-left: 100px;
+    margin-right: 100px; */
+}

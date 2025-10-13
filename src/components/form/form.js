@@ -100,13 +100,23 @@ export class FormComponent extends LitElement {
   }
 
   toggleTipo(e) {
-    const tipo = e.target.value;
-    if (e.target.checked) {
-      this.tipos = [...this.tipos, tipo];
-    } else {
-      this.tipos = this.tipos.filter(t => t !== tipo);
+  const tipo = e.target.value;
+
+  if (e.target.checked) {
+    if (this.tipos.length >= 2) {
+      // Evita seleccionar más de 2 tipos
+      e.target.checked = false;
+      alert("Solo puedes seleccionar 2 tipos.");
+      return;
     }
+    this.tipos = [...this.tipos, tipo];
+  } else {
+    this.tipos = this.tipos.filter(t => t !== tipo);
   }
+
+  this.requestUpdate(); // asegura que el render se actualice
+}
+
 
   render() {
     return html`
@@ -116,7 +126,7 @@ export class FormComponent extends LitElement {
         <input placeholder="Ej. Pikachu" .value=${this.nombre} @input=${e => this.nombre = e.target.value}>
 
         <label>Tipo(s):</label>
-        <div class="tipos-container">
+        <div class="tipos-container" id="tipos-container">
           ${this.tiposDisponibles.map(tipo => html`
             <label class="tipo-item">
               <input
@@ -136,7 +146,7 @@ export class FormComponent extends LitElement {
         <label>Altura (m):</label>
         <input type="number" min="1" .value=${this.altura} @input=${e => this.altura = e.target.value}>
 
-        <button type="button" @click=${this.guardarPokemon}>
+        <smart-button class="glow-on-hover" type="button" @click=${this.guardarPokemon}>
           ${this.id ? 'Actualizar Pokémon' : 'Guardar Pokémon'} <!-- Botón para guardar o actualizar Pokémon -->
         </button>
       </form>

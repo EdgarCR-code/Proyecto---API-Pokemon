@@ -5,8 +5,21 @@ export default css`
       display: flex;
       flex-direction: column;
       gap: 10px;
-      width: 300px;
+      width: 80vw;
       margin-bottom: 20px;
+      background-color: #cfcfcfff;
+      padding: 20px;
+      border-radius: 10px;
+      
+    }
+
+    div {
+      //background-color: #d0d0d0ff;
+      box-shadow: 0 2px 4px rgba(1, 0, 0, 0.1);
+      padding: 30px;
+      margin: 10px;
+      border-radius: 4px;
+      width: 60vw;
     }
 
     label {
@@ -19,21 +32,119 @@ export default css`
       border-radius: 4px;
       font-size: 14px;
     }
+   
 
     select[multiple] {
       height: 120px;
     }
 
-    button {
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 5px;
-      cursor: pointer;
+    /* smart button*/
+
+    smart-button {
+      width: 100%;
     }
 
-    button:hover {
-      background-color: #2563eb;
+.button-demo {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.button-demo label {
+    font-size: 18px;
+    font-weight: normal;
+    font-family: auto;
+    color: white;
+}
+
+.demo-buttons-group {
+    margin-top: 20px;
+}
+
+/* Hover Glow Effect */
+smart-button.glow-on-hover {
+    overflow: initial;
+    width: auto;
+    --smart-button-opacity-focus: initial;
+    --smart-button-opacity-hover: initial;
+    --smart-button-opacity-active: initial;
+}
+
+smart-button.glow-on-hover button {
+    overflow: hidden;
+}
+
+smart-button.glow-on-hover button,
+.glow-on-hover {
+    height: 50px;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+smart-button.glow-on-hover button:before,
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+smart-button.glow-on-hover button:active,
+.glow-on-hover:active {
+    color: #000;
+    --smart-button-color-active: #000;
+}
+
+smart-button.glow-on-hover:active button:after,
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+smart-button.glow-on-hover:hover button:before,
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+smart-button.glow-on-hover button:after,
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% {
+        background-position: 0 0;
     }
+
+    50% {
+        background-position: 400% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
   `;
