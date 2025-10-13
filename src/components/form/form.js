@@ -120,8 +120,9 @@ export class FormComponent extends LitElement {
 
   render() {
     return html`
-      <h3>${this.id ? `Editar Pokémon #${this.id}` : 'Agregar Pokémon'}</h3>
+      
       <form @submit=${e => e.preventDefault()}>
+        <h2>${this.id ? `Editar Pokémon #${this.id}` : 'Agregar Pokémon'}</h3>
         <label>Nombre:</label>
         <input placeholder="Ej. Pikachu" .value=${this.nombre} @input=${e => this.nombre = e.target.value}>
 

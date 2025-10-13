@@ -7,10 +7,10 @@ export default css`
       gap: 10px;
       width: 80vw;
       margin-bottom: 20px;
-      background-color: #cfcfcfff;
+      margin-top: 10px;
+      background-color: #e2e1e1ff;
       padding: 20px;
       border-radius: 10px;
-      
     }
 
     div {

@@ -46,7 +46,7 @@ export class ListComponent extends LitElement {
 
     render() {
         return html`
-        <h3>Listado de Pokémon</h3>
+        <h2>Listado de Pokémon</h3>
         <table class="smart-table">
             <thead>
             <tr>

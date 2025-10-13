@@ -6,6 +6,7 @@
 
 list-component {
     width: 80vw;
+    margin-bottom: 20px;
 }
 h1 {
     font-size: 30px;
@@ -17,6 +18,4 @@ h1 {
     text-align: center;
     width: 80vw;
     position: relative;
-    /* margin-left: 100px;
-    margin-right: 100px; */
 }

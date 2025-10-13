@@ -49,4 +49,3 @@ Combina datos reales de la API con información almacenada localmente mediante *
    ```
 
 Con esto, la aplicación estará lista para probarse en el navegador.
-s
