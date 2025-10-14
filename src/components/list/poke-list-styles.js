@@ -1,6 +1,15 @@
 import { css } from 'lit-element';
  
 export default css`
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+    
   /* This is the CSS used in the demo */
   .smart-table {
       --smart-table-row-detail-height: 110px;
@@ -15,7 +24,7 @@ export default css`
     }
 
     .smart-table thead {
-      background-color: #f4f4f4;
+      background-color: rgb(82, 82, 247);
     }
 
     .smart-table .smart-table-detail-container {

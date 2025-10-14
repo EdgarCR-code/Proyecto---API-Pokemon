@@ -36,7 +36,7 @@ export class FormComponent extends LitElement {
     const localData = JSON.parse(localStorage.getItem("pokemons")) || [];
 
     let nuevo;
-    if (this.id) {
+    if (this.id) { // Actualizar pokemon existente
       // Si tiene ID → actualizar el existente
       nuevo = {
         id: this.id,
@@ -54,7 +54,7 @@ export class FormComponent extends LitElement {
         localData.push(nuevo);
       }
       alert(`Pokémon #${this.id} actualizado con éxito.`);
-    } else {
+    } else { // Crear nuevo Pokemon
       //Si no tiene ID → crear nuevo
       const maxApiId = 20;//Es el numero de pokemos que pedimos en el fetch de la API
       const maxLocalId = localData.length > 0 ? Math.max(...localData.map(p => p.id)) : 0;
@@ -124,7 +124,7 @@ export class FormComponent extends LitElement {
       <form @submit=${e => e.preventDefault()}>
         <h2>${this.id ? `Editar Pokémon #${this.id}` : 'Agregar Pokémon'}</h3>
         <label>Nombre:</label>
-        <input placeholder="Ej. Pikachu" .value=${this.nombre} @input=${e => this.nombre = e.target.value}>
+        <input type="text" placeholder="Ej. Pikachu" .value=${this.nombre} @input=${e => this.nombre = e.target.value}>
 
         <label>Tipo(s):</label>
         <div class="tipos-container" id="tipos-container">
