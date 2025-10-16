@@ -43,9 +43,46 @@ Combina datos reales de la API con información almacenada localmente mediante *
    npm install
    ```
 
-4. Una vez completada la instalación, ejecuta el proyecto en un servidor local con el siguiente comando:  
-   ```bash
-   npm start
-   ```
-
 Con esto, la aplicación estará lista para probarse en el navegador.
+
+
+# Instrucciones de uso
+
+1. **Inicia la aplicación**
+   - Ejecuta el comando:
+     ```bash
+     npm start
+     ```
+     Esto abrirá automáticamente la aplicación en tu navegador, normalmente en:  
+      `http://localhost:8000`
+
+2. **Visualiza los Pokémon de la PokéAPI**
+   - Al cargar la página, verás una **tabla** con los primeros 20 Pokémon obtenidos directamente desde la PokéAPI.  
+   - Estos Pokémon se muestran solo como **referencia** (no se pueden editar ni eliminar).  
+
+3. **Agrega tus propios Pokémon personalizados**
+   - En la parte superior de la página encontrarás un **formulario** con los siguientes campos:
+     - **Nombre:** texto libre.  
+     - **Tipos:** puedes seleccionar uno o varios tipos (Agua, Fuego, Planta, etc.).  
+     - **Peso:** número en kilogramos.  
+     - **Altura:** número en metros.  
+   - Da clic en el botón **“Guardar Pokémon”**.  
+   - Tu Pokémon aparecerá al final de la tabla, con su propio **ID consecutivo**, después de los Pokémon de la API.  
+
+4. **Editar un Pokémon personalizado**
+   - Localiza tu Pokémon en la tabla y da clic en el botón **“Editar”**.  
+   - El formulario se llenará automáticamente con sus datos.  
+   - Realiza los cambios que desees y presiona **“Guardar Cambios”**.  
+   - El Pokémon se actualizará sin modificar su ID original.  
+
+5. **Eliminar un Pokémon personalizado**
+   - En la tabla, da clic en el botón **“Eliminar”** del Pokémon que quieras quitar.  
+   - Se mostrará una confirmación; al aceptar, el Pokémon será eliminado del **LocalStorage** y desaparecerá de la tabla.  
+
+6. **Persistencia de datos**
+   - Los Pokémon que agregues o edites se guardan en el **LocalStorage** del navegador.  
+   - Si cierras o recargas la página, tus Pokémon personalizados **seguirán apareciendo**.  
+
+7. **Pokémon de la API vs. Pokémon locales**
+   - Los Pokémon de la API aparecen con un texto *“API”* en la columna de acciones.  
+   - Los Pokémon locales tienen los botones **Editar** y **Eliminar** disponibles.  
