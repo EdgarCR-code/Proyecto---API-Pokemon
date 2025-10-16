@@ -8,8 +8,8 @@ html {
 
 .header {
   display: flex;
-  align-items: center;       /* Centra verticalmente texto e imagen */
-  justify-content: center;   /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra verticalmente texto e imagen */
+  justify-content: center; /* Centra el contenido horizontalmente */
   font-size: 32px;
   font-weight: bold;
   color: white;
@@ -17,23 +17,22 @@ html {
   background-color: black;
   padding: 16px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  gap: 12px;                 /* espacio entre texto e imagen */
-  margin: 0; 
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  gap: 12px; /* espacio entre texto e imagen */
+  margin: 0;
 }
 
 html::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.56);
-    z-index: -1;
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.56);
+  z-index: -1;
 }
 
 .header img {
   width: 90px;
   height: auto;
-  
 }
 
 body {
@@ -44,26 +43,26 @@ body {
   font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
-  min-height: 100vh; 
-  position: relative; 
+  min-height: 100vh;
+  position: relative;
 }
 
 .contenedor {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 900px;
-    margin: 40px auto;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  margin: 40px auto;
+  gap: 20px;
 }
 .component-div {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    padding: 30px;
-    margin-bottom: 30px;
-    border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
