@@ -3,6 +3,7 @@ html {
   padding: 0;
   height: 100%; /* asegura que cubran toda la pantalla */
   overflow-x: hidden; /* evita scroll horizontal */
+  font-family: "Poppins", sans-serif;
 }
 
 .header {
@@ -12,7 +13,8 @@ html {
   font-size: 32px;
   font-weight: bold;
   color: white;
-  background: #3b4cca;
+  /* background: #3b4cca; */
+  background-color: black;
   padding: 16px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -28,13 +30,12 @@ html::before {
     z-index: -1;
 }
 
-/* Ajuste de la imagen */
 .header img {
-  width: 60px;
+  width: 90px;
   height: auto;
+  
 }
 
-/* ===== Fondo general ===== */
 body {
   background-image: url(../src/img/Fondo.png);
   background-size: cover;
@@ -43,12 +44,10 @@ body {
   font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
-  min-height: 100vh; /* asegura que body cubra toda la pantalla */
-  position: relative; /* necesario para que ::before se posicione correctamente */
+  min-height: 100vh; 
+  position: relative; 
 }
 
-
-/* ===== Contenedor principal ===== */
 .contenedor {
     display: flex;
     flex-direction: column;
@@ -63,7 +62,8 @@ body {
     gap: 20px;
     width: 100%;
     padding: 30px;
+    margin-bottom: 30px;
     border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }

@@ -1,5 +1,5 @@
-import { css } from 'lit-element';
- 
+import { css } from "lit-element";
+
 export default css`
   :host {
     display: flex;
@@ -37,6 +37,7 @@ export default css`
     margin-bottom: 0.3rem;
   }
 
+  input,
   input[type="text"],
   input[type="number"] {
     padding: 0.6rem 0.8rem;
@@ -45,15 +46,15 @@ export default css`
     font-size: 1rem;
     outline: none;
     transition: all 0.25s ease;
+    width: 100%;
   }
 
-  input[type="text"]:focus,
-  input[type="number"]:focus {
+  input:focus {
     border-color: #3b4cca;
     box-shadow: 0 0 5px rgba(59, 76, 202, 0.3);
   }
 
-  /* Contenedor de tipos */
+
   .tipos-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -61,7 +62,7 @@ export default css`
     margin-top: 0.3rem;
   }
 
-  /* Estilo de cada tipo (checkbox visual) */
+
   .tipo-item {
     display: flex;
     align-items: center;
@@ -74,19 +75,48 @@ export default css`
     font-weight: 500;
     cursor: pointer;
     transition: all 0.25s ease;
-  }
-
-  .tipo-item:hover {
-    background-color: #e8ebff;
-    border-color: #3b4cca;
+    color: #222;
   }
 
   .tipo-item input {
-    accent-color: #3b4cca;
+    accent-color: currentColor;
     width: 18px;
     height: 18px;
     cursor: pointer;
   }
+
+  .tipo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  }
+
+
+  .tipo-item:has(input[value="Agua"]) { background-color: #bde0fe; color: #023e8a; }
+  .tipo-item:has(input[value="Fuego"]) { background-color: #ffb3a7; color: #b30000; }
+  .tipo-item:has(input[value="Planta"]) { background-color: #b9fbc0; color: #1b4332; }
+  .tipo-item:has(input[value="Eléctrico"]) { background-color: #fff8b4; color: #8a6d00; }
+  .tipo-item:has(input[value="Roca"]) { background-color: #d8c7a3; color: #4b371c; }
+  .tipo-item:has(input[value="Tierra"]) { background-color: #e9d8a6; color: #5c3d00; }
+  .tipo-item:has(input[value="Normal"]) { background-color: #f1f1f1; color: #444; }
+  .tipo-item:has(input[value="Lucha"]) { background-color: #ffc6b6; color: #6b1b00; }
+  .tipo-item:has(input[value="Siniestro"]) { background-color: #a8a8a8; color: #111; }
+  .tipo-item:has(input[value="Acero"]) { background-color: #cfd8dc; color: #263238; }
+  .tipo-item:has(input[value="Psíquico"]) { background-color: #ffb6d9; color: #5c1a5f; }
+  .tipo-item:has(input[value="Fantasma"]) { background-color: #d0bdf4; color: #3b2066; }
+  .tipo-item:has(input[value="Bicho"]) { background-color: #e1f8b0; color: #42590b; }
+  .tipo-item:has(input[value="Veneno"]) { background-color: #e2b8ff; color: #4b0082; }
+  .tipo-item:has(input[value="Volador"]) { background-color: #c7eaff; color: #023047; }
+  .tipo-item:has(input[value="Hada"]) { background-color: #ffd6ec; color: #a020f0; }
+  .tipo-item:has(input[value="Hielo"]) { background-color: #bdeff7; color: #005f73; }
+  .tipo-item:has(input[value="Dragón"]) { background-color: #cbb2fe; color: #3f0071; }
+
+
+  .tipo-item:has(input:checked) {
+    border: 2px solid currentColor;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    transform: translateY(-2px) scale(1.03);
+  }
+
 
   /* Smart button */
   smart-button {

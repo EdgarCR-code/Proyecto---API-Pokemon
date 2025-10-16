@@ -24,7 +24,9 @@ export default css`
     }
 
     .smart-table thead {
-      background-color: rgb(82, 82, 247);
+      /* background-color: rgb(82, 82, 247); */
+      background-color: black;
+      color: white;
     }
 
     .smart-table .smart-table-detail-container {
