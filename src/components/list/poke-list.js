@@ -40,6 +40,14 @@ export class ListComponent extends LitElement {
       this.pokemons = [...this.pokemons, ...localData];
     } catch (error) {
       console.error("Error al obtener los Pokémon:", error);
+
+      modal.show({
+        title: "Error al obtener Pokémon",
+        message: `No se pudo obtener la información del Pokémon.`,
+        type: "error",
+        autoClose: true,
+        duration: 2000,
+      });
     }
   }
 
@@ -99,14 +107,28 @@ export class ListComponent extends LitElement {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  eliminarPokemon(id) {
-    if (confirm("¿Eliminar este Pokémon?")) {
-      const localData = JSON.parse(localStorage.getItem("pokemons")) || [];
-      const actualizado = localData.filter((p) => p.id !== id);
-      localStorage.setItem("pokemons", JSON.stringify(actualizado));
-      this.pokemons = actualizado;
-      window.location.reload();
-    }
+  async eliminarPokemon(id) {
+    const modal = document.querySelector("#modal");
+
+    const confirmado = await modal.show({
+      title: "Eliminar Pokémon",
+      message: "¿Seguro que deseas eliminar este Pokémon?",
+      type: "confirm",
+    });
+
+    if (!confirmado) return;
+
+    const localData = JSON.parse(localStorage.getItem("pokemons")) || [];
+    const actualizado = localData.filter((p) => p.id !== id);
+    localStorage.setItem("pokemons", JSON.stringify(actualizado));
+
+    await modal.show({
+      title: "Pokémon eliminado",
+      message: `El Pokémon #${id} fue eliminado correctamente.`,
+      type: "success",
+    });
+
+    this.pokemons = this.pokemons.filter((p) => p.id !== id);
   }
 }
 

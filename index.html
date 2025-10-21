@@ -3,14 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Pokemon APP</title>
     <script type="module" src="./main.js"></script>
     <script
       type="module"
       src="./node_modules/smart-webcomponents/source/modules/smart.table.js"
     ></script>
     <link rel="stylesheet" href="./styles/index.css" />
+    <link rel="shortcut icon" href="./src/img/logo.png"
   </head>
+
+  <!-- //Separa la vista de pokemones aletorios, pokemones personalizados y formulario
+
+  // Crear una rama para cambiar los alerts por un modal reutilizable -->
   
   <body>
     <div class="header">
@@ -21,10 +26,12 @@
     </div>
 
     <div class="contenedor">
+      
       <form-component></form-component>
       <div class="component-div">
         <list-component></list-component>
       </div>
+      <modal-component id="modal"></modal-component>
     </div>
   </body>
 </html>

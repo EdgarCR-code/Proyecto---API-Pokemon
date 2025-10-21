@@ -74,7 +74,14 @@ export class FormComponent extends LitElement {
         // si no estaba en localStorage (por alguna razón), lo agregamos
         localData.push(nuevo);
       }
-      alert(`Pokémon #${this.id} actualizado con éxito.`);
+
+      modal.show({
+        title: "Pokémon actualizado",
+        message: `El Pokémon "${this.nombre}" fue actualizado.`,
+        type: "success",
+        autoClose: true
+      });
+      
     } else {
       // Crear nuevo Pokemon
       //Si no tiene ID → crear nuevo
@@ -92,17 +99,25 @@ export class FormComponent extends LitElement {
       };
 
       localData.push(nuevo);
-      alert(`Pokémon agregado con ID #${nuevoId}`);
+      
+      modal.show({
+        title: "Pokémon agregado",
+        message: `El Pokémon "${this.nombre}" fue añadido.`,
+        type: "success",
+        autoClose: true
+      });
     }
-
+    
     localStorage.setItem("pokemons", JSON.stringify(localData));
+
+      
 
     this.dispatchEvent(
       new CustomEvent("pokemon-agregado", { bubbles: true, composed: true })
     );
 
     this.limpiarFormulario();
-    window.location.reload();
+    //window.location.reload();
   }
 
   //Cargar Pokémon para edición
@@ -131,7 +146,14 @@ export class FormComponent extends LitElement {
       if (this.tipos.length >= 2) {
         // Evita seleccionar más de 2 tipos
         e.target.checked = false;
-        alert("Solo puedes seleccionar 2 tipos.");
+        
+        modal.show({
+          title: "Selección de tipos",
+          message: `Solo puedes seleccionar 2 tipos.`,
+          type: "error",
+          autoClose: true
+        });
+        
         return;
       }
       this.tipos = [...this.tipos, tipo];
