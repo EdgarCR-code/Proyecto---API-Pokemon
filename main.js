@@ -1,5 +1,6 @@
 import './src/components/form/form.js';
 import './src/components/list/poke-list.js';
+import "./src/components/modal/modal.js";
 
 // Esperamos a que el DOM cargue
 window.addEventListener('DOMContentLoaded', () => {
