@@ -1,36 +1,36 @@
-// setupTests.js
-import fetchMock from "jest-fetch-mock";
-fetchMock.enableMocks();
+require('jest-fetch-mock').enableMocks();
+const { JSDOM } = require('jsdom');
+const { fireEvent } = require('@testing-library/dom');
 
+// Creamos un DOM simulado
+const dom = new JSDOM(`<!DOCTYPE html><body></body>`);
+global.document = dom.window.document;
+global.window = dom.window;
+global.HTMLElement = dom.window.HTMLElement;
+global.customElements = dom.window.customElements;
+global.CustomEvent = dom.window.CustomEvent;
 
-// 🔹 Mock básico de localStorage para evitar errores
-const localStorageMock = (() => {
-  let store = {};
-  return {
-    getItem(key) {
-      return store[key] || null;
-    },
-    setItem(key, value) {
-      store[key] = String(value);
-    },
-    removeItem(key) {
-      delete store[key];
-    },
-    clear() {
-      store = {};
-    },
-  };
-})();
-
-Object.defineProperty(global, "localStorage", {
-  value: localStorageMock,
-});
-
-// 🔹 Evita errores si se usan funciones de alert/confirm
-global.alert = jest.fn();
-global.confirm = jest.fn(() => true);
-
-// 🔹 Si usas un modal global (como en tu código)
-global.modal = {
-  show: jest.fn().mockResolvedValue(true),
+// Mock localStorage
+global.localStorage = {
+  store: {},
+  getItem(key) {
+    return this.store[key] || null;
+  },
+  setItem(key, value) {
+    this.store[key] = String(value);
+  },
+  removeItem(key) {
+    delete this.store[key];
+  },
+  clear() {
+    this.store = {};
+  },
 };
+
+// Mock del modal global
+global.modal = {
+  show: jest.fn(),
+};
+
+// Exponer fireEvent globalmente
+global.fireEvent = fireEvent;
