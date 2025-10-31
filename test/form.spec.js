@@ -121,7 +121,7 @@ describe("FormComponent", () => {
     });
   });
 
-  describe.only("Tipos de Pokémon", () => {
+  describe("Tipos de Pokémon", () => {
     it("debe evitar seleccionar más de 2 tipos", () => {
       component.tipos = MOCK_POKEMONS.TIPOS_CHECK;
       const e = { target: { value: "Agua", checked: true } };
