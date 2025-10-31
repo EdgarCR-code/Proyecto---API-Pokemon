@@ -68,7 +68,7 @@ module.exports = function(config) {
           lines: 100
         }
       },
-      // Excluimos archivos de styles del coverage
+      
       watermarks: {
         statements: [50, 80],
         functions: [50, 80],
