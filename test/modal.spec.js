@@ -1,30 +1,34 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { ModalComponent } from '../src/components/modal/modal.js';
+import { expect } from "chai";
+import sinon from "sinon";
+import { ModalComponent } from "../src/components/modal/modal.js";
 
-describe('ModalComponent', () => {
+describe("ModalComponent", () => {
   let modal;
 
   beforeEach(() => {
     modal = new ModalComponent();
   });
 
-  describe('Inicialización', () => {
-    it('debería inicializar propiedades correctamente', () => {
+  describe("Inicialización", () => {
+    it("debería inicializar propiedades correctamente", () => {
       expect(modal.visible).to.be.false;
-      expect(modal.title).to.equal('');
-      expect(modal.message).to.equal('');
-      expect(modal.type).to.equal('success');
+      expect(modal.title).to.equal("");
+      expect(modal.message).to.equal("");
+      expect(modal.type).to.equal("success");
     });
   });
 
-  describe('Método show()', () => {
-    it('establece propiedades y visible = true', async () => {
-      const promise = modal.show({ title: 'Test', message: 'Mensaje', type: 'error' });
+  describe("Método show()", () => {
+    it("establece propiedades y visible = true", async () => {
+      const promise = modal.show({
+        title: "Test",
+        message: "Mensaje",
+        type: "error",
+      });
 
-      expect(modal.title).to.equal('Test');
-      expect(modal.message).to.equal('Mensaje');
-      expect(modal.type).to.equal('error');
+      expect(modal.title).to.equal("Test");
+      expect(modal.message).to.equal("Mensaje");
+      expect(modal.type).to.equal("error");
       expect(modal.visible).to.be.true;
 
       // cerrar manualmente para resolver la promesa
@@ -33,7 +37,7 @@ describe('ModalComponent', () => {
       expect(result).to.be.true;
     });
 
-    it('resuelve automáticamente si autoClose está activo', async () => {
+    it("resuelve automáticamente si autoClose está activo", async () => {
       const clock = sinon.useFakeTimers();
       const promise = modal.show({ autoClose: true, duration: 1000 });
 
@@ -48,8 +52,8 @@ describe('ModalComponent', () => {
     });
   });
 
-  describe('Método close()', () => {
-    it('cambia visible a false y resuelve promesa', async () => {
+  describe("Método close()", () => {
+    it("cambia visible a false y resuelve promesa", async () => {
       const promise = modal.show({});
       modal.close(false);
       const result = await promise;
@@ -58,21 +62,23 @@ describe('ModalComponent', () => {
     });
   });
 
-  describe('Renderizado según tipo', () => {
-    it('modal tipo confirm tiene botones de aceptar y cancelar', () => {
-      modal.type = 'confirm';
+  describe("Renderizado según tipo", () => {
+    it("modal tipo confirm tiene botones de aceptar y cancelar", () => {
+      modal.type = "confirm";
       const template = modal.render();
-      expect(modal.type).to.equal('confirm');
+      expect(modal.type).to.equal("confirm");
     });
 
-    it('modal tipo success/error tiene solo botón aceptar', () => {
-      modal.type = 'success';
+    it("modal tipo success tiene solo botón aceptar", () => {
+      modal.type = "success";
       const template = modal.render();
-      expect(modal.type).to.equal('success');
+      expect(modal.type).to.equal("success");
+    });
 
-      modal.type = 'error';
-      const template2 = modal.render();
-      expect(modal.type).to.equal('error');
+    it("modal tipo error tiene solo botón aceptar", () => {
+      modal.type = "error";
+      const template = modal.render();
+      expect(modal.type).to.equal("error");
     });
   });
 });
