@@ -52,8 +52,12 @@ export class FormComponent extends LitElement {
       alert("Todos los campos son obligatorios.");
       return;
     }
+    
+    let localData = JSON.parse(localStorage.getItem('pokemons') || '[]');
+    if (!Array.isArray(localData)) {
+      localData = [];
+    }
 
-    const localData = JSON.parse(localStorage.getItem("pokemons")) || [];
 
     let nuevo;
     if (this.id) {

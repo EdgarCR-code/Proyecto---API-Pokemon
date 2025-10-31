@@ -9,9 +9,10 @@ describe('ListComponent', () => {
 
   beforeEach(() => {
     component = new ListComponent();
-
+    
     // Mock global modal
-    global.modal = { show: sinon.stub() };
+    modalStub = sinon.stub();
+    global.modal = { show: modalStub };
 
     // Limpiar localStorage
     localStorage.clear();
@@ -19,82 +20,83 @@ describe('ListComponent', () => {
 
   afterEach(() => {
     sinon.restore();
+    fetchStub?.restore?.();
   });
 
-  it('debería inicializar pokemons como array vacío', () => {
-    expect(component.pokemons).to.be.an('array').that.is.empty;
-  });
-
-  it('editarPokemon dispara evento con el detalle correcto', () => {
-    const spy = sinon.spy();
-    component.addEventListener('editar-pokemon', spy);
-
-    const pokemon = { id: 21, nombre: 'Test' };
-    component.editarPokemon(pokemon);
-
-    expect(spy.calledOnce).to.be.true;
-    expect(spy.args[0][0].detail).to.deep.equal(pokemon);
-  });
-
-  it('obtenerPokemons llena la lista con datos de API y localStorage', async () => {
-    // Mock fetch
-    const apiResponse = {
-      results: [{ url: 'https://pokeapi.co/api/v2/pokemon/1' }]
-    };
-    const detailsResponse = { id: 1, name: 'bulbasaur', types: [{ type: { name: 'planta' } }], weight: 6, height: 0.7 };
-
-    fetchStub = sinon.stub(global, 'fetch');
-    fetchStub.onFirstCall().resolves({
-      json: async () => apiResponse
+  describe('Inicialización', () => {
+    it('debería inicializar pokemons como array vacío', () => {
+      expect(component.pokemons).to.be.an('array').that.is.empty;
     });
-    fetchStub.onSecondCall().resolves({
-      json: async () => detailsResponse
+  });
+
+  describe('Editar Pokémon', () => {
+    it('editarPokemon dispara evento con el detalle correcto', () => {
+      const spy = sinon.spy();
+      component.addEventListener('editar-pokemon', spy);
+
+      const pokemon = { id: 21, nombre: 'Test' };
+      component.editarPokemon(pokemon);
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.args[0][0].detail).to.deep.equal(pokemon);
+    });
+  });
+
+  describe('Obtener Pokémon', () => {
+    it('obtenerPokemons llena la lista con datos de API y localStorage', async () => {
+      const apiResponse = { results: [{ url: 'https://pokeapi.co/api/v2/pokemon/1' }] };
+      const detailsResponse = { id: 1, name: 'bulbasaur', types: [{ type: { name: 'planta' } }], weight: 6, height: 0.7 };
+
+      fetchStub = sinon.stub(global, 'fetch');
+      fetchStub.onFirstCall().resolves({ json: async () => apiResponse });
+      fetchStub.onSecondCall().resolves({ json: async () => detailsResponse });
+
+      localStorage.setItem('pokemons', JSON.stringify([{ id: 50, nombre: 'local', tipos: 'fuego', peso: 10, altura: 1 }]));
+
+      await component.obtenerPokemons();
+
+      expect(component.pokemons).to.have.lengthOf(2);
+      expect(component.pokemons[1].nombre).to.equal('local');
     });
 
-    localStorage.setItem('pokemons', JSON.stringify([{ id: 50, nombre: 'local', tipos: 'fuego', peso: 10, altura: 1 }]));
+    it('obtenerPokemons llama modal.show en caso de error', async () => {
+      fetchStub = sinon.stub(global, 'fetch').rejects(new Error('API fail'));
 
-    await component.obtenerPokemons();
+      await component.obtenerPokemons();
 
-    expect(component.pokemons).to.have.lengthOf(2);
-    expect(component.pokemons[1].nombre).to.equal('local');
+      expect(modalStub.calledOnce).to.be.true;
+      expect(modalStub.args[0][0].title).to.equal('Error al obtener Pokémon');
+    });
   });
 
-  it('obtenerPokemons llama modal.show en caso de error', async () => {
-    fetchStub = sinon.stub(global, 'fetch').rejects(new Error('API fail'));
+  describe('Eliminar Pokémon', () => {
+    it('eliminarPokemon elimina Pokémon si se confirma', async () => {
+      localStorage.setItem('pokemons', JSON.stringify([{ id: 30, nombre: 'Test', tipos: 'agua', peso: 10, altura: 1 }]));
+      component.pokemons = [{ id: 30, nombre: 'Test' }];
 
-    await component.obtenerPokemons();
+      // Simular modal de confirmación
+      const fakeModal = { show: sinon.stub().resolves(true) };
+      global.document.querySelector = sinon.stub().returns(fakeModal);
 
-    expect(modal.show.calledOnce).to.be.true;
-    expect(modal.show.args[0][0].title).to.equal('Error al obtener Pokémon');
-  });
+      await component.eliminarPokemon(30);
 
-  it('eliminarPokemon elimina Pokémon si se confirma', async () => {
-    // Prellenar localStorage y componente
-    localStorage.setItem('pokemons', JSON.stringify([{ id: 30, nombre: 'Test', tipos: 'agua', peso: 10, altura: 1 }]));
-    component.pokemons = [{ id: 30, nombre: 'Test' }];
+      const stored = JSON.parse(localStorage.getItem('pokemons'));
+      expect(stored).to.have.lengthOf(0);
+      expect(component.pokemons).to.have.lengthOf(0);
+    });
 
-    // Mock modal.show para confirmar
-    const fakeModal = { show: sinon.stub().resolves(true) };
-    global.document.querySelector = sinon.stub().returns(fakeModal);
+    it('eliminarPokemon no elimina si se cancela', async () => {
+      const fakeModal = { show: sinon.stub().resolves(false) };
+      global.document.querySelector = sinon.stub().returns(fakeModal);
 
-    await component.eliminarPokemon(30);
+      component.pokemons = [{ id: 99, nombre: 'Test' }];
+      localStorage.setItem('pokemons', JSON.stringify([{ id: 99, nombre: 'Test' }]));
 
-    const stored = JSON.parse(localStorage.getItem('pokemons'));
-    expect(stored).to.have.lengthOf(0);
-    expect(component.pokemons).to.have.lengthOf(0);
-  });
+      await component.eliminarPokemon(99);
 
-  it('eliminarPokemon no elimina si se cancela', async () => {
-    const fakeModal = { show: sinon.stub().resolves(false) };
-    global.document.querySelector = sinon.stub().returns(fakeModal);
-
-    component.pokemons = [{ id: 99, nombre: 'Test' }];
-    localStorage.setItem('pokemons', JSON.stringify([{ id: 99, nombre: 'Test' }]));
-
-    await component.eliminarPokemon(99);
-
-    const stored = JSON.parse(localStorage.getItem('pokemons'));
-    expect(stored).to.have.lengthOf(1);
-    expect(component.pokemons).to.have.lengthOf(1);
+      const stored = JSON.parse(localStorage.getItem('pokemons'));
+      expect(stored).to.have.lengthOf(1);
+      expect(component.pokemons).to.have.lengthOf(1);
+    });
   });
 });

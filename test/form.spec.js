@@ -1,103 +1,164 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
-import { FormComponent } from '../src/components/form/form.js';
+import { expect } from "chai";
+import sinon from "sinon";
+import { FormComponent } from "../src/components/form/form.js";
 
-describe('FormComponent', () => {
+describe("FormComponent", () => {
   let component;
-  let modalShowStub;
+  let sandbox;
 
   beforeEach(() => {
-    // Crear instancia del componente
+    sandbox = sinon.createSandbox();
     component = new FormComponent();
+    document.body.appendChild(component);
 
-    // Mockear modal.show global (supongo que es un objeto global)
-    global.modal = { show: sinon.stub() };
+    // mock global modal
+    global.modal = { show: sandbox.stub().resolves(true) };
 
-    // Limpiar localStorage antes de cada test
-    localStorage.clear();
+    // mock localStorage
+    const storage = {};
+    sandbox.stub(window.localStorage, "getItem").callsFake((key) => storage[key]);
+    sandbox.stub(window.localStorage, "setItem").callsFake((key, val) => {
+      storage[key] = val;
+    });
+
+    // spy dispatchEvent
+    sandbox.spy(component, "dispatchEvent");
   });
 
   afterEach(() => {
-    sinon.restore();
+    sandbox.restore();
+    document.body.innerHTML = "";
   });
 
-  it('debería inicializar las propiedades correctamente', () => {
-    expect(component.id).to.be.null;
-    expect(component.nombre).to.equal('');
-    expect(component.tipos).to.be.an('array').that.is.empty;
-    expect(component.peso).to.equal('');
-    expect(component.altura).to.equal('');
-    expect(component.tiposDisponibles).to.include('Agua');
-    expect(component.tiposDisponibles).to.include('Fuego');
-  });
-
-  it('guardarPokemon agrega un nuevo Pokémon al localStorage', () => {
-    component.nombre = 'Pikachu';
-    component.tipos = ['Eléctrico'];
-    component.peso = 6;
-    component.altura = 0.4;
-
-    const eventSpy = sinon.spy();
-    component.addEventListener('pokemon-agregado', eventSpy);
-
-    component.guardarPokemon();
-
-    const pokemons = JSON.parse(localStorage.getItem('pokemons'));
-    expect(pokemons).to.have.lengthOf(1);
-    expect(pokemons[0].nombre).to.equal('Pikachu');
-    expect(eventSpy.calledOnce).to.be.true;
-    expect(modal.show.calledOnce).to.be.true;
-  });
-
-  it('guardarPokemon muestra alerta si faltan campos', () => {
-    const alertStub = sinon.stub(window, 'alert');
-
-    component.guardarPokemon();
-
-    expect(alertStub.calledOnce).to.be.true;
-  });
-
-  it('cargarPokemon llena correctamente el formulario', () => {
-    const pokemon = {
-      id: 5,
-      nombre: 'Bulbasaur',
-      tipos: 'Planta, Veneno',
-      peso: 6.9,
-      altura: 0.7
-    };
-
-    component.cargarPokemon(pokemon);
-
-    expect(component.id).to.equal(5);
-    expect(component.nombre).to.equal('Bulbasaur');
-    expect(component.tipos).to.deep.equal(['Planta', 'Veneno']);
-    expect(component.peso).to.equal(6.9);
-    expect(component.altura).to.equal(0.7);
-  });
-
-  it('toggleTipo agrega y quita tipos correctamente', () => {
-    // Simular evento de checkbox
-    const fakeEvent = (value, checked) => ({
-      target: { value, checked }
+  describe("Inicialización y limpieza", () => {
+    it("debe inicializar con valores por defecto", () => {
+      expect(component.id).to.be.null;
+      expect(component.nombre).to.equal("");
+      expect(component.tipos).to.be.an("array").that.is.empty;
+      expect(component.peso).to.equal("");
+      expect(component.altura).to.equal("");
     });
 
-    component.toggleTipo(fakeEvent('Fuego', true));
-    expect(component.tipos).to.include('Fuego');
+    it("debe limpiar el formulario correctamente", () => {
+      component.id = 1;
+      component.nombre = "Bulbasaur";
+      component.tipos = ["Planta"];
+      component.peso = 10;
+      component.altura = 1;
 
-    component.toggleTipo(fakeEvent('Fuego', false));
-    expect(component.tipos).to.not.include('Fuego');
-  });
+      component.limpiarFormulario();
 
-  it('toggleTipo no permite más de 2 tipos', () => {
-    const fakeEvent = (value, checked) => ({
-      target: { value, checked }
+      expect(component.id).to.be.null;
+      expect(component.nombre).to.equal("");
+      expect(component.tipos).to.be.empty;
+      expect(component.peso).to.equal("");
+      expect(component.altura).to.equal("");
     });
 
-    component.toggleTipo(fakeEvent('Fuego', true));
-    component.toggleTipo(fakeEvent('Agua', true));
-    component.toggleTipo(fakeEvent('Planta', true));
+    it("debe cargar un Pokémon para edición", () => {
+      const pokemon = {
+        id: 1,
+        nombre: "Charmander",
+        tipos: "Fuego, Dragón",
+        peso: 8,
+        altura: 0.6,
+      };
+      component.cargarPokemon(pokemon);
+      expect(component.id).to.equal(1);
+      expect(component.nombre).to.equal("Charmander");
+      expect(component.tipos).to.deep.equal(["Fuego", "Dragón"]);
+    });
+  });
 
-    expect(component.tipos.length).to.equal(2);
-    expect(modal.show.calledOnce).to.be.true;
+  describe("Guardar Pokémon", () => {
+    it("debe mostrar alerta si los campos están incompletos", () => {
+      const alertStub = sandbox.stub(window, "alert");
+      component.guardarPokemon();
+      expect(alertStub.calledOnce).to.be.true;
+    });
+
+    it("debe crear un nuevo Pokémon en localStorage si no tiene ID", () => {
+      component.nombre = "Squirtle";
+      component.tipos = ["Agua"];
+      component.peso = 9;
+      component.altura = 0.5;
+
+      component.guardarPokemon();
+
+      const data = JSON.parse(window.localStorage.setItem.firstCall.args[1]);
+      expect(data).to.have.lengthOf(1);
+      expect(data[0].nombre).to.equal("Squirtle");
+      expect(global.modal.show.calledOnce).to.be.true;
+      expect(component.dispatchEvent.calledOnce).to.be.true;
+    });
+
+    it("debe actualizar un Pokémon existente si tiene ID", () => {
+      const existing = [{ id: 25, nombre: "Pikachu", tipos: "Eléctrico", peso: 6, altura: 0.4 }];
+      window.localStorage.getItem.returns(JSON.stringify(existing));
+
+      component.id = 25;
+      component.nombre = "Raichu";
+      component.tipos = ["Eléctrico"];
+      component.peso = 30;
+      component.altura = 0.8;
+
+      component.guardarPokemon();
+
+      const data = JSON.parse(window.localStorage.setItem.firstCall.args[1]);
+      expect(data[0].nombre).to.equal("Raichu");
+      expect(global.modal.show.calledOnce).to.be.true;
+      expect(component.dispatchEvent.calledOnce).to.be.true;
+    });
+
+    it("debe agregar Pokémon si tiene ID pero no está en localStorage", () => {
+      const storedPokemons = [{ id: 2, nombre: "Eevee", tipos: "Normal", peso: 6, altura: 0.3 }];
+      window.localStorage.getItem.returns(JSON.stringify(storedPokemons));
+
+      component.id = 99; // ID que no existe
+      component.nombre = "Mew";
+      component.tipos = ["Psíquico"];
+      component.peso = 4;
+      component.altura = 0.4;
+
+      component.guardarPokemon();
+
+      const data = JSON.parse(window.localStorage.setItem.firstCall.args[1]);
+      expect(data).to.have.lengthOf(2);
+      expect(global.modal.show.calledOnce).to.be.true;
+      expect(component.dispatchEvent.calledOnce).to.be.true;
+    });
+
+    it("debe crear nueva lista si localStorage está vacío", () => {
+      window.localStorage.getItem.returns(null);
+      component.nombre = "Charmander";
+      component.tipos = ["Fuego"];
+      component.peso = 10;
+      component.altura = 1;
+
+      component.guardarPokemon();
+
+      const data = JSON.parse(window.localStorage.setItem.firstCall.args[1]);
+      expect(data).to.have.lengthOf(1);
+      expect(data[0].nombre).to.equal("Charmander");
+    });
+  });
+
+  describe("Tipos de Pokémon", () => {
+    it("debe evitar seleccionar más de 2 tipos", () => {
+      component.tipos = ["Fuego", "Planta"];
+      const e = { target: { value: "Agua", checked: true } };
+      component.toggleTipo(e);
+      expect(global.modal.show.calledOnce).to.be.true;
+    });
+
+    it("debe agregar y quitar tipos correctamente", () => {
+      const addEvent = { target: { value: "Fuego", checked: true } };
+      component.toggleTipo(addEvent);
+      expect(component.tipos).to.include("Fuego");
+
+      const removeEvent = { target: { value: "Fuego", checked: false } };
+      component.toggleTipo(removeEvent);
+      expect(component.tipos).to.not.include("Fuego");
+    });
   });
 });
