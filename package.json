@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "web-dev-server --node-resolve --open --watch",
-    "test": "karma start --single-run",
-    "test:watch": "karma start",
-    "test:coverage": "karma start --single-run --reporters coverage"
+    "test": "cross-env NODE_ENV=test karma start --single-run",
+    "test:watch": "cross-env NODE_ENV=test karma start",
+    "test:coverage": "cross-env NODE_ENV=test karma start --single-run --reporters coverage"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +22,9 @@
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@open-wc/testing": "^4.0.0",
     "babel-loader": "^10.0.0",
+    "babel-plugin-istanbul": "^7.0.1",
     "chai": "^6.2.0",
+    "cross-env": "^10.1.0",
     "jsdom": "^27.0.1",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
@@ -30,7 +32,7 @@
     "karma-mocha": "^2.0.1",
     "karma-sinon": "^1.0.5",
     "karma-webpack": "^5.0.1",
-    "mocha": "^11.7.4",
+    "mocha": "^11.7.5",
     "sinon": "^21.0.0",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1"
