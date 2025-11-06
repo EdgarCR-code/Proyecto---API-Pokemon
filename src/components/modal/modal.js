@@ -62,15 +62,23 @@ export class ModalComponent extends LitElement {
         <div class="buttons">
           ${this.type === "confirm"
             ? html`
-                <button class="cancel" @click=${() => this.close(false)}>
+                <button
+                  id="btn-cancelar"
+                  class="cancel"
+                  @click=${() => this.close(false)}
+                >
                   Cancelar
                 </button>
-                <button class="confirm" @click=${() => this.close(true)}>
+                <button
+                  id="btn-aceptar"
+                  class="confirm"
+                  @click=${() => this.close(true)}
+                >
                   Aceptar
                 </button>
               `
             : html`
-                <button class="ok" @click=${() => this.close(true)}>
+                <button id="btn-ok" class="ok" @click=${() => this.close(true)}>
                   Aceptar
                 </button>
               `}

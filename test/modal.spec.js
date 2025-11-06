@@ -81,4 +81,60 @@ describe("ModalComponent", () => {
       expect(modal.type).to.equal("error");
     });
   });
+
+    describe("Eventos de botones (funciones flecha del template)", () => {
+    beforeEach(() => {
+      // renderizamos el modal completo en el DOM para poder simular clics
+      document.body.appendChild(modal);
+    });
+
+    afterEach(() => {
+      modal.remove();
+    });
+
+    it("ejecuta la función flecha del botón OK (tipo success)", async () => {
+      const closeSpy = sinon.spy(modal, "close");
+      modal.show({ title: "OK", message: "Todo bien", type: "success" });
+
+      // forzamos render
+      modal.requestUpdate();
+      await modal.updateComplete;
+
+      // buscamos el botón OK
+      const btnOk = modal.shadowRoot.querySelector("button.ok");
+      expect(btnOk).to.exist;
+
+      btnOk.click();
+      expect(closeSpy.calledOnceWith(true)).to.be.true;
+    });
+
+    it("ejecuta la función flecha del botón Cancelar (tipo confirm)", async () => {
+      const closeSpy = sinon.spy(modal, "close");
+      modal.show({ title: "Confirmar", message: "¿Seguro?", type: "confirm" });
+
+      modal.requestUpdate();
+      await modal.updateComplete;
+
+      const btnCancelar = modal.shadowRoot.querySelector("button.cancel");
+      expect(btnCancelar).to.exist;
+
+      btnCancelar.click();
+      expect(closeSpy.calledOnceWith(false)).to.be.true;
+    });
+
+    it("ejecuta la función flecha del botón Aceptar (tipo confirm)", async () => {
+      const closeSpy = sinon.spy(modal, "close");
+      modal.show({ title: "Confirmar", message: "¿Seguro?", type: "confirm" });
+
+      modal.requestUpdate();
+      await modal.updateComplete;
+
+      const btnAceptar = modal.shadowRoot.querySelector("button.confirm");
+      expect(btnAceptar).to.exist;
+
+      btnAceptar.click();
+      expect(closeSpy.calledOnceWith(true)).to.be.true;
+    });
+  });
+
 });

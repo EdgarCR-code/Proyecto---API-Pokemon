@@ -99,4 +99,36 @@ describe('ListComponent', () => {
       expect(component.pokemons).to.have.lengthOf(1);
     });
   });
+
+    describe('Renderizado (template con funciones flecha)', () => {
+    it('renderiza filas de tabla para cada Pokémon', async () => {
+      component.pokemons = [
+        { id: 10, nombre: 'Caterpie', tipos: 'bicho', peso: 2.9, altura: 0.3 },
+        { id: 25, nombre: 'Pikachu', tipos: 'eléctrico', peso: 6, altura: 0.4 }
+      ];
+
+      // Forzar renderizado de Lit
+      document.body.appendChild(component);
+      await component.updateComplete;
+
+      const htmlOutput = component.shadowRoot.innerHTML;
+      expect(htmlOutput).to.include('Caterpie');
+      expect(htmlOutput).to.include('Pikachu');
+    });
+
+    it('muestra "<em>API</em>" para Pokémon con id <= 20', async () => {
+      component.pokemons = [
+        { id: 10, nombre: 'Caterpie', tipos: 'bicho', peso: 2.9, altura: 0.3 }
+      ];
+
+      document.body.appendChild(component);
+      await component.updateComplete;
+
+      const htmlOutput = component.shadowRoot.innerHTML;
+      expect(htmlOutput).to.include('<em>API</em>');
+    });
+
+
+  });
+
 });

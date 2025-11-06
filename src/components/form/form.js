@@ -196,11 +196,11 @@ export class FormComponent extends LitElement {
         </div>
 
         <label>Peso (kg):</label>
-        <input type="number" min="1" .value=${this.peso} @input=${(e) =>
+        <input id="input-peso" type="number" min="1" .value=${this.peso} @input=${(e) =>
       (this.peso = e.target.value)}>
 
         <label>Altura (m):</label>
-        <input type="number" min="1" .value=${this.altura} @input=${(e) =>
+        <input id="input-altura" type="number" min="1" .value=${this.altura} @input=${(e) =>
       (this.altura = e.target.value)}>
 
         <smart-button class="glow-on-hover" type="button" @click=${

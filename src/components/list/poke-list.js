@@ -76,12 +76,13 @@ export class ListComponent extends LitElement {
                 <td>${p.altura}</td>
                 <td>
                   ${p.id > 20 // Pokémon de la API
-                    ? html` <smart-button
-                          class="glow-on-hover"
+                    ? html` 
+                        <smart-button
+                          class="glow-on-hover" id="editar-btn"
                           @click=${() => this.editarPokemon(p)}
                           >Editar</smart-button
                         >
-                        <smart-button
+                        <smart-button id="eliminar-btn"
                           class="glow-on-hover"
                           @click=${() => this.eliminarPokemon(p.id)}
                           >Eliminar</smart-button
@@ -118,7 +119,7 @@ export class ListComponent extends LitElement {
 
     if (!confirmado) return;
 
-    const localData = JSON.parse(localStorage.getItem("pokemons")) || [];
+    const localData = JSON.parse(localStorage.getItem("pokemons")) || "[]";
     const actualizado = localData.filter((p) => p.id !== id);
     localStorage.setItem("pokemons", JSON.stringify(actualizado));
 
